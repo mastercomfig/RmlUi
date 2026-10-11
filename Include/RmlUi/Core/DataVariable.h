@@ -150,6 +150,8 @@ protected:
 		{
 			if (address.name == "size")
 				return MakeLiteralIntVariable(container_size);
+			if (address.name == "empty")
+				return MakeLiteralIntVariable(container_size == 0 ? 1 : 0);
 
 			Log::Message(Log::LT_WARNING, "Data array index out of bounds.");
 			return DataVariable();
