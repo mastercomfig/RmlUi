@@ -8,6 +8,7 @@
 #include "LayoutDetails.h"
 #include <algorithm>
 #include <cmath>
+#include <limits>
 
 namespace Rml {
 
@@ -138,7 +139,7 @@ bool ContainerBox::CatchOverflow(const Vector2f visible_overflow_size, const Vec
 	if (available_space.y < 0.f)
 		available_space.y = max_height;
 	if (available_space.y < 0.f)
-		available_space.y = HUGE_VALF;
+		available_space.y = std::numeric_limits<float>::infinity();
 
 	RMLUI_ASSERT(available_space.x >= 0.f && available_space.y >= 0.f);
 
