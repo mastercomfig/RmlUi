@@ -148,7 +148,30 @@ void ElementFormControlSelect::MoveChildren()
 
 bool ElementFormControlSelect::GetIntrinsicDimensions(Vector2f& intrinsic_dimensions, float& /*ratio*/)
 {
-	intrinsic_dimensions.x = 128 * ElementUtilities::GetDensityIndependentPixelRatio(this);
+	const float dp = ElementUtilities::GetDensityIndependentPixelRatio(this);
+	float text_width = 0.0f;
+	if (widget)
+	{
+		Element* option = widget->GetOption(widget->GetSelection());
+		if (option)
+		{
+			String text;
+			option->GetInnerRML(text);
+			if (!text.empty())
+			{
+				text_width = (float)ElementUtilities::GetStringWidth(this, text);
+			}
+		}
+	}
+
+	if (text_width > 0.0f)
+	{
+		intrinsic_dimensions.x = text_width + 48.0f * dp;
+	}
+	else
+	{
+		intrinsic_dimensions.x = 128.0f * dp;
+	}
 	intrinsic_dimensions.y = GetLineHeight();
 
 	return true;
