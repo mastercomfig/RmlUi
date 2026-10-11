@@ -455,6 +455,19 @@ void ReleaseRenderManagers()
 	}
 }
 
+void SetFontHinting(int hinting)
+{
+	if (font_interface)
+		font_interface->SetHinting(hinting);
+}
+
+int GetFontHinting()
+{
+	if (font_interface)
+		return font_interface->GetHinting();
+	return 1;
+}
+
 // Functions that need to be accessible within the Core library, but not publicly.
 namespace CoreInternal {
 

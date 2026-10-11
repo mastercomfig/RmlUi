@@ -171,4 +171,9 @@ RMLUICORE_API void ReleaseFontResources();
 /// @note Also releases font resources, which invalidates all existing FontFaceHandles returned from the font engine.
 RMLUICORE_API void ReleaseRenderManagers();
 
+/// Sets the font hinting mode on the font engine (0 = None, 1 = Light, 2 = Normal, 3 = Auto).
+RMLUICORE_API void SetFontHinting(int hinting);
+/// Gets the current font hinting mode from the font engine.
+RMLUICORE_API int GetFontHinting();
+
 } // namespace Rml

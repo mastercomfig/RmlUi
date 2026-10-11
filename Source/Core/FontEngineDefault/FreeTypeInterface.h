@@ -37,5 +37,9 @@ namespace FreeType {
 	// Returns true if the font face has kerning.
 	bool HasKerning(FontFaceHandleFreetype face);
 
+	// Sets the hinting mode: 0 = None, 1 = Light (default), 2 = Normal, 3 = Auto
+	void SetHinting(int hinting);
+	int GetHinting();
+
 } // namespace FreeType
 } // namespace Rml

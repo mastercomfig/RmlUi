@@ -13,6 +13,7 @@
 namespace Rml {
 
 static FT_Library ft_library = nullptr;
+static int g_hinting = 1;
 
 static bool BuildGlyph(FT_Face ft_face, Character character, FontGlyphMap& glyphs, float bitmap_scaling_factor);
 static void BuildGlyphMap(FT_Face ft_face, int size, FontGlyphMap& glyphs, float bitmap_scaling_factor, bool load_default_glyphs);
@@ -245,6 +246,16 @@ bool FreeType::HasKerning(FontFaceHandleFreetype face)
 	return FT_HAS_KERNING(ft_face);
 }
 
+void FreeType::SetHinting(int hinting)
+{
+	g_hinting = hinting;
+}
+
+int FreeType::GetHinting()
+{
+	return g_hinting;
+}
+
 static void BuildGlyphMap(FT_Face ft_face, int size, FontGlyphMap& glyphs, const float bitmap_scaling_factor, const bool load_default_glyphs)
 {
 	if (load_default_glyphs)
@@ -293,7 +304,30 @@ static bool BuildGlyph(FT_Face ft_face, const Character character, FontGlyphMap&
 	if (index == 0)
 		return false;
 
-	FT_Error error = FT_Load_Glyph(ft_face, index, FT_LOAD_COLOR);
+	FT_Int32 load_flags = FT_LOAD_COLOR;
+	FT_Render_Mode render_mode = FT_RENDER_MODE_LIGHT;
+	switch (g_hinting)
+	{
+	case 0:
+		load_flags |= FT_LOAD_NO_HINTING | FT_LOAD_TARGET_NORMAL;
+		render_mode = FT_RENDER_MODE_NORMAL;
+		break;
+	case 1:
+		load_flags |= FT_LOAD_TARGET_LIGHT;
+		render_mode = FT_RENDER_MODE_LIGHT;
+		break;
+	case 2:
+	default:
+		load_flags |= FT_LOAD_TARGET_NORMAL;
+		render_mode = FT_RENDER_MODE_NORMAL;
+		break;
+	case 3:
+		load_flags |= FT_LOAD_FORCE_AUTOHINT | FT_LOAD_TARGET_NORMAL;
+		render_mode = FT_RENDER_MODE_NORMAL;
+		break;
+	}
+
+	FT_Error error = FT_Load_Glyph(ft_face, index, load_flags);
 	if (error != 0)
 	{
 #ifdef RMLUI_DEBUG
@@ -306,7 +340,7 @@ static bool BuildGlyph(FT_Face ft_face, const Character character, FontGlyphMap&
 #endif
 	}
 
-	error = FT_Render_Glyph(ft_face->glyph, FT_RENDER_MODE_NORMAL);
+	error = FT_Render_Glyph(ft_face->glyph, render_mode);
 	if (error != 0)
 	{
 #ifdef RMLUI_DEBUG
@@ -459,7 +493,7 @@ static void GenerateMetrics(FT_Face ft_face, FontMetrics& metrics, float bitmap_
 
 	// Determine the x-height of this font face.
 	FT_UInt index = FT_Get_Char_Index(ft_face, 'x');
-	if (index != 0 && FT_Load_Glyph(ft_face, index, 0) == 0)
+	if (index != 0 && FT_Load_Glyph(ft_face, index, FT_LOAD_TARGET_LIGHT) == 0)
 		metrics.x_height = ft_face->glyph->metrics.height * bitmap_scaling_factor / float(1 << 6);
 	else
 		metrics.x_height = 0.5f * metrics.line_spacing;

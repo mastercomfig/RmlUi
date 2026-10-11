@@ -2,6 +2,7 @@
 #include "../../../Include/RmlUi/Core/StringUtilities.h"
 #include "FontFaceHandleDefault.h"
 #include "FontProvider.h"
+#include "FreeTypeInterface.h"
 
 namespace Rml {
 
@@ -75,6 +76,16 @@ int FontEngineInterfaceDefault::GetVersion(FontFaceHandle handle)
 void FontEngineInterfaceDefault::ReleaseFontResources()
 {
 	FontProvider::ReleaseFontResources();
+}
+
+void FontEngineInterfaceDefault::SetHinting(int hinting)
+{
+	FreeType::SetHinting(hinting);
+}
+
+int FontEngineInterfaceDefault::GetHinting() const
+{
+	return FreeType::GetHinting();
 }
 
 } // namespace Rml

@@ -47,6 +47,9 @@ public:
 
 	/// Releases resources owned by sized font faces, including their textures and rendered glyphs.
 	void ReleaseFontResources() override;
+
+	void SetHinting(int hinting) override;
+	int GetHinting() const override;
 };
 
 } // namespace Rml

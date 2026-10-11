@@ -111,6 +111,10 @@ public:
 	/// Called by RmlUi when it wants to garbage collect memory used by fonts.
 	/// @note All existing FontFaceHandles and FontEffectsHandles are considered invalid after this call.
 	virtual void ReleaseFontResources();
+
+	/// Sets font hinting mode (0 = None, 1 = Light, 2 = Normal, 3 = Auto).
+	virtual void SetHinting(int /*hinting*/) {}
+	virtual int GetHinting() const { return 1; }
 };
 
 } // namespace Rml
