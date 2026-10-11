@@ -590,6 +590,11 @@ public:
 	/// Return the computed values of the element's properties. These values are updated as appropriate on every Context::Update.
 	const ComputedValues& GetComputedValues() const;
 
+	/// Forces a re-layout of this element, and any other elements required.
+	virtual void DirtyLayout();
+	/// Returns true if the element has been marked as needing a re-layout.
+	virtual bool IsLayoutDirty();
+
 protected:
 	void Update(float dp_ratio, Vector2f vp_dimensions);
 	void Render();
@@ -630,11 +635,6 @@ protected:
 	/// Called when a child node has been removed up to two levels below us in the hierarchy.
 	/// @param[in] child The element that has been removed. This may be this element.
 	virtual void OnChildRemove(Element* child);
-
-	/// Forces a re-layout of this element, and any other elements required.
-	virtual void DirtyLayout();
-	/// Returns true if the element has been marked as needing a re-layout.
-	virtual bool IsLayoutDirty();
 
 	/// Returns the RML of this element and all children.
 	/// @param[out] content The content of this element and those under it, in XML form.

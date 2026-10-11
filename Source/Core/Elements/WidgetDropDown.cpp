@@ -111,6 +111,7 @@ void WidgetDropDown::OnUpdate()
 
 		value_rml_dirty = false;
 		value_layout_dirty = true;
+		parent_element->DirtyLayout();
 	}
 }
 
@@ -316,6 +317,7 @@ void WidgetDropDown::SetSelection(Element* select_option, bool force)
 	}
 
 	value_rml_dirty = true;
+	parent_element->DirtyLayout();
 }
 
 void WidgetDropDown::SeekSelection(bool seek_forward)
