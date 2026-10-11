@@ -14,7 +14,9 @@ WidgetTextInputSingleLine::WidgetTextInputSingleLine(ElementFormControl* parent)
 
 void WidgetTextInputSingleLine::SanitizeValue(String& value)
 {
-	value.erase(std::remove_if(value.begin(), value.end(), [](char c) { return c == '\r' || c == '\n' || c == '\t'; }), value.end());
+	value.erase(std::remove_if(value.begin(), value.end(), [](char c) {
+		return (unsigned char)c < 32 || c == 127;
+	}), value.end());
 }
 
 void WidgetTextInputSingleLine::LineBreak()
