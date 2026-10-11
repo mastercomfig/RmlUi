@@ -172,7 +172,7 @@ void WidgetSlider::SetValue(float target_value)
 	float new_value = min_value + Math::Round(num_steps) * step;
 
 	if (new_value != value)
-		SetBarPosition(SetValueInternal(new_value));
+		SetBarPosition(SetValueInternal(new_value, false));
 }
 
 float WidgetSlider::GetValue() const
@@ -487,17 +487,17 @@ float WidgetSlider::OnBarChange(float bar_position)
 	float new_value = min_value + bar_position * (max_value - min_value);
 	int num_steps = Math::RoundToInteger((new_value - value) / step);
 
-	return SetValueInternal(value + num_steps * step);
+	return SetValueInternal(value + num_steps * step, true);
 }
 
 float WidgetSlider::OnLineIncrement()
 {
-	return SetValueInternal(value + step);
+	return SetValueInternal(value + step, true);
 }
 
 float WidgetSlider::OnLineDecrement()
 {
-	return SetValueInternal(value - step);
+	return SetValueInternal(value - step, true);
 }
 
 float WidgetSlider::AbsolutePositionToBarPosition(float absolute_position) const
@@ -600,7 +600,7 @@ float WidgetSlider::SetValueInternal(float new_value, bool force_submit_change_e
 
 	const bool value_changed = (value != GetParent()->GetAttribute("value", 0.0f));
 
-	if (force_submit_change_event || value_changed)
+	if (force_submit_change_event && value_changed)
 	{
 		Dictionary parameters;
 		parameters["value"] = value;

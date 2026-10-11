@@ -92,7 +92,7 @@ private:
 	void ResizeProgress();
 
 	// Clamps the new value, sets it on the slider and returns it as a normalized number from 0 to 1.
-	float SetValueInternal(float new_value, bool force_submit_change_event = true);
+	float SetValueInternal(float new_value, bool force_submit_change_event = false);
 
 	ElementFormControl* parent;
 
