@@ -194,10 +194,15 @@ bool FontFaceLayer::GenerateTexture(Vector<byte>& texture_data, Vector2i& textur
 					{
 					case ColorFormat::A8:
 					{
-						// We use premultiplied alpha, so copy the alpha into all four channels.
+						// We use straight alpha (RGB = 255, A = coverage) because the render interface shader (UnlitGeneric translucent)
+						// uses straight alpha blending (src_alpha, one_minus_src_alpha). Premultiplying alpha causes squared alpha darkening.
 						for (int k = 0; k < num_bytes_per_line; ++k)
-							for (int c = 0; c < 4; ++c)
-								destination[k * 4 + c] = source[k];
+						{
+							destination[k * 4 + 0] = 255;
+							destination[k * 4 + 1] = 255;
+							destination[k * 4 + 2] = 255;
+							destination[k * 4 + 3] = source[k];
+						}
 					}
 					break;
 					case ColorFormat::RGBA8:
