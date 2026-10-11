@@ -279,6 +279,9 @@ bool PropertyParserColour::ParseRGBColour(Colourb& colour, const String& value)
 		// We're parsing a percentage value.
 		if (values[i].size() > 0 && values[i][values[i].size() - 1] == '%')
 			component = int((float)atof(values[i].substr(0, values[i].size() - 1).c_str()) * (255.0f / 100.0f));
+		// We're parsing a float 0.0 -> 1.0 value (especially for alpha channel).
+		else if (values[i].find('.') != String::npos)
+			component = int((float)atof(values[i].c_str()) * 255.0f);
 		// We're parsing a 0 -> 255 integer value.
 		else
 			component = atoi(values[i].c_str());
