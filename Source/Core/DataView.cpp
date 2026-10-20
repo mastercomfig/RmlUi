@@ -46,12 +46,22 @@ void DataViews::Add(DataViewPtr view)
 
 void DataViews::OnElementRemove(Element* element)
 {
+	for (auto it = views_to_add.begin(); it != views_to_add.end();)
+	{
+		auto& view = *it;
+		if (!view || !view->IsValid() || view->GetElement() == element)
+			it = views_to_add.erase(it);
+		else
+			++it;
+	}
+
 	for (auto it = views.begin(); it != views.end();)
 	{
 		auto& view = *it;
-		if (view && view->GetElement() == element)
+		if (!view || !view->IsValid() || view->GetElement() == element)
 		{
-			views_to_remove.push_back(std::move(view));
+			if (view)
+				views_to_remove.push_back(std::move(view));
 			it = views.erase(it);
 		}
 		else
@@ -78,6 +88,9 @@ bool DataViews::Update(DataModel& model, const DirtyVariables& dirty_variables)
 			views.reserve(views.size() + views_to_add.size());
 			for (auto&& view : views_to_add)
 			{
+				if (!view || !view->IsValid())
+					continue;
+
 				dirty_views.push_back(view.get());
 				for (const String& variable_name : view->GetVariableNameList())
 					name_view_map.emplace(variable_name, view.get());
