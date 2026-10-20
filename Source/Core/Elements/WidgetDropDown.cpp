@@ -445,6 +445,11 @@ void WidgetDropDown::OnChildRemove(Element* element)
 
 	element->RemoveEventListener(EventId::Click, this);
 
+	if (auto model = value_element->GetDataModel())
+		model->EraseAliases(value_element);
+	value_element->SetInnerRML(String());
+	value_rml_dirty = true;
+
 	if (element->HasAttribute("selected"))
 		SetSelection(nullptr);
 
